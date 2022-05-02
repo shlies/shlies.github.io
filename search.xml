@@ -20,101 +20,6 @@
 ]]></content>
   </entry>
   <entry>
-    <title>Hexo博客搭建并部署到GitHub</title>
-    <url>/2022/03/30/hexo/</url>
-    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>Hexo属于静态博客，因此一大优势就是可以不用专门的服务器作为支撑。经过一番折腾终于将这个博客运行起来了，中间踩了不少坑，写这一篇来简明记录安装过程</p>
-<span id="more"></span>
-<h2 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h2><h3 id="Node-js"><a href="#Node-js" class="headerlink" title="Node.js"></a>Node.js</h3><p>Ubuntu运行以下命令安装Nodejs与npm</p>
-<pre><code>sudo apt install nodejs npm
-</code></pre>
-<p>Windows可在<a href="https://nodejs.org/zh-cn/download/" title="nodejs">官网</a>下载</p>
-<h3 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h3><p>Ubuntu运行以下命令安装</p>
-<pre><code>sudo apt install git-all
-</code></pre>
-<p>Windows可在[<a href="https://git-scm.com/download/win]%E4%B8%8B%E8%BD%BD">https://git-scm.com/download/win]下载</a></p>
-<h2 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h2><p>安装hexo</p>
-<pre><code>npm install hexo-cli g
-</code></pre>
-<p><em>一般建议安装hexo-cli，最小版hexo在切换主题时可能有bug</em></p>
-<p>初始化名为“blog”的博客文件夹</p>
-<pre><code>hexo init blog
-</code></pre>
-<h2 id="安装主题"><a href="#安装主题" class="headerlink" title="安装主题"></a>安装主题</h2><p>切换到主题文件夹</p>
-<pre><code>cd blog/themes
-</code></pre>
-<p>获取NexT主题</p>
-<pre><code>git clone https://github.com/theme-next/hexo-theme-next next
-</code></pre>
-<p>打开blog&#x2F;_config.yml 文件，修改为</p>
-<pre><code>title: 博客标题
-subtitle: &#39;&#39;
-description: &#39;&#39;
-keywords:
-author: 作者名
-language: zh-CN
-timezone: &#39;&#39;
-</code></pre>
-<p>修改 theme 后面的名字为你刚才安装的主题，比如 next。</p>
-<p>回到原文件夹</p>
-<pre><code>cd ..
-</code></pre>
-<p>新建一篇名为“my_site”的空白文章</p>
-<pre><code>hexo new my_site
-</code></pre>
-<p>部署</p>
-<pre><code>hexo g
-</code></pre>
-<p>本地预览</p>
-<pre><code>hexo s
-</code></pre>
-<p>打开浏览器，访问<a href="http://localhost:4000/" title="这是主页">http://localhost:4000</a>，能正常显示即可</p>
-<h2 id="部署到GitHub"><a href="#部署到GitHub" class="headerlink" title="部署到GitHub"></a>部署到GitHub</h2><h3 id="创建仓库"><a href="#创建仓库" class="headerlink" title="创建仓库"></a>创建仓库</h3><p>登录后点击GitHub首页左栏的New创建新仓库，Repository name填<code>用户名.github.io</code>，Description可留空，类型建议选Private，最后点Create Repository</p>
-<h3 id="连接仓库"><a href="#连接仓库" class="headerlink" title="连接仓库"></a>连接仓库</h3><pre><code>git config --global user.name &quot;用户名&quot;
-git config --global user.email 邮箱
-</code></pre>
-<p>创建密钥文件</p>
-<pre><code>ssh-keygen -t rsa -C &quot;你的github账号邮箱&quot;
-</code></pre>
-<h3 id="将公钥添加到Github"><a href="#将公钥添加到Github" class="headerlink" title="将公钥添加到Github"></a>将公钥添加到Github</h3><p>将<code>~/.ssh/id_rsa.pub</code>中的内容全部复制<br>登陆到GitHub上，右上角<code>小头像-&gt;Setting-&gt;SSH and GPG keys</code>中，点击<code>new SSH key</code><br>title随便填，将复制的内容粘到<code>Key</code>中，点<code>Add</code>保存</p>
-<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><pre><code>ssh -T git@github.com
-</code></pre>
-<p>如果结果为 “ …You’ve successfully authenticated, but GitHub does not provide shell access”，则说明成功。</p>
-<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>打开<code>blog/_config.yml</code> 文件，修改为</p>
-<pre><code>deploy:
-  type: git
-  repo: https://github.com/用户名/用户名.github.io.git
-  branch: master
-</code></pre>
-<h3 id="获取令牌"><a href="#获取令牌" class="headerlink" title="获取令牌"></a>获取令牌</h3><p>Github在2021年移除了密码授权方式，因此还需创建令牌<br>在<code>Setting-&gt; Developer settings-&gt;Personal access tokens</code>中,选<code>Generate New token</code>,<code>Note</code>随便填,<code>Select scopes</code>中将<code>repo</code>全选，然后<strong>将生成的token妥善保存</strong>，以后将无法再次查看，如果遗忘只能重设。</p>
-<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><pre><code>hexo clean
-hexo g -d #构建并部署
-</code></pre>
-<p>填入Username，Password填之前的token<br>稍后即可在https:&#x2F;&#x2F;用户名.github.io看到你的博客了！</p>
-<hr>
-<p>下一篇将会记录内容编写与个性化设置</p>
-]]></content>
-  </entry>
-  <entry>
-    <title>埃罗芒阿老师OVA 1080p超清</title>
-    <url>/2022/04/30/ova/</url>
-    <content><![CDATA[<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><span id="more"></span>
-<p><a href="https://shlies.vercel.app/%E8%A7%86%E9%A2%91/[UHA-WINGS][Eromanga%20Sensei][OVA][01-02][BDRIP%201920x1080][x264%20AAC][CHS](1)/">下载地址1</a></p>
-<p><a href="https://swartart-my.sharepoint.com/:f:/g/personal/admin_swartart_onmicrosoft_com/EutIQzg1q1lImye1c0psqXEBBdLzUs8J1-L86kCu1pNsnA?e=E18puH">下载地址2(Onedrive)</a></p>
-<hr>
-<h1 id="在线播放"><a href="#在线播放" class="headerlink" title="在线播放"></a>在线播放</h1><h2 id="01"><a href="#01" class="headerlink" title="01"></a>01</h2><div align=center>
-<video controls>
-<source src="https://shlies.vercel.app/%E8%A7%86%E9%A2%91/[UHA-WINGS][Eromanga%20Sensei][OVA][01-02][BDRIP%201920x1080][x264%20AAC][CHS](1)/[UHA-WINGS][Eromanga%20Sensei][OVA][01][BDRIP%201920x1080][x264%20AAC][CHS].mp4">
-</video>
-</div>
-
-
-<h2 id="02"><a href="#02" class="headerlink" title="02"></a>02</h2><div align=center>
-<video controls>
-<source src="https://shlies.vercel.app/%E8%A7%86%E9%A2%91/[UHA-WINGS][Eromanga%20Sensei][OVA][01-02][BDRIP%201920x1080][x264%20AAC][CHS](1)/[UHA-WINGS][Eromanga%20Sensei][OVA][02][BDRIP%201920x1080][x264%20AAC][CHS].mp4">
-</video>
-</div>]]></content>
-  </entry>
-  <entry>
     <title>Markdown语法规范</title>
     <url>/2022/03/30/markdown/</url>
     <content><![CDATA[<p>为防止忘记，将Markdown语法记录于此</p>
@@ -356,6 +261,101 @@ _   底线
 <li>[1] <a href="https://hyxxsfwy.github.io/2016/01/15/Hexo-Markdown-%E7%AE%80%E6%98%8E%E8%AF%AD%E6%B3%95%E6%89%8B%E5%86%8C/">Hexo-Markdown-简明语法手册</a></li>
 </ul>
 ]]></content>
+  </entry>
+  <entry>
+    <title>Hexo博客搭建并部署到GitHub</title>
+    <url>/2022/03/30/hexo/</url>
+    <content><![CDATA[<h2 id="引言"><a href="#引言" class="headerlink" title="引言"></a>引言</h2><p>Hexo属于静态博客，因此一大优势就是可以不用专门的服务器作为支撑。经过一番折腾终于将这个博客运行起来了，中间踩了不少坑，写这一篇来简明记录安装过程</p>
+<span id="more"></span>
+<h2 id="配置环境"><a href="#配置环境" class="headerlink" title="配置环境"></a>配置环境</h2><h3 id="Node-js"><a href="#Node-js" class="headerlink" title="Node.js"></a>Node.js</h3><p>Ubuntu运行以下命令安装Nodejs与npm</p>
+<pre><code>sudo apt install nodejs npm
+</code></pre>
+<p>Windows可在<a href="https://nodejs.org/zh-cn/download/" title="nodejs">官网</a>下载</p>
+<h3 id="Git"><a href="#Git" class="headerlink" title="Git"></a>Git</h3><p>Ubuntu运行以下命令安装</p>
+<pre><code>sudo apt install git-all
+</code></pre>
+<p>Windows可在[<a href="https://git-scm.com/download/win]%E4%B8%8B%E8%BD%BD">https://git-scm.com/download/win]下载</a></p>
+<h2 id="安装Hexo"><a href="#安装Hexo" class="headerlink" title="安装Hexo"></a>安装Hexo</h2><p>安装hexo</p>
+<pre><code>npm install hexo-cli g
+</code></pre>
+<p><em>一般建议安装hexo-cli，最小版hexo在切换主题时可能有bug</em></p>
+<p>初始化名为“blog”的博客文件夹</p>
+<pre><code>hexo init blog
+</code></pre>
+<h2 id="安装主题"><a href="#安装主题" class="headerlink" title="安装主题"></a>安装主题</h2><p>切换到主题文件夹</p>
+<pre><code>cd blog/themes
+</code></pre>
+<p>获取NexT主题</p>
+<pre><code>git clone https://github.com/theme-next/hexo-theme-next next
+</code></pre>
+<p>打开blog&#x2F;_config.yml 文件，修改为</p>
+<pre><code>title: 博客标题
+subtitle: &#39;&#39;
+description: &#39;&#39;
+keywords:
+author: 作者名
+language: zh-CN
+timezone: &#39;&#39;
+</code></pre>
+<p>修改 theme 后面的名字为你刚才安装的主题，比如 next。</p>
+<p>回到原文件夹</p>
+<pre><code>cd ..
+</code></pre>
+<p>新建一篇名为“my_site”的空白文章</p>
+<pre><code>hexo new my_site
+</code></pre>
+<p>部署</p>
+<pre><code>hexo g
+</code></pre>
+<p>本地预览</p>
+<pre><code>hexo s
+</code></pre>
+<p>打开浏览器，访问<a href="http://localhost:4000/" title="这是主页">http://localhost:4000</a>，能正常显示即可</p>
+<h2 id="部署到GitHub"><a href="#部署到GitHub" class="headerlink" title="部署到GitHub"></a>部署到GitHub</h2><h3 id="创建仓库"><a href="#创建仓库" class="headerlink" title="创建仓库"></a>创建仓库</h3><p>登录后点击GitHub首页左栏的New创建新仓库，Repository name填<code>用户名.github.io</code>，Description可留空，类型建议选Private，最后点Create Repository</p>
+<h3 id="连接仓库"><a href="#连接仓库" class="headerlink" title="连接仓库"></a>连接仓库</h3><pre><code>git config --global user.name &quot;用户名&quot;
+git config --global user.email 邮箱
+</code></pre>
+<p>创建密钥文件</p>
+<pre><code>ssh-keygen -t rsa -C &quot;你的github账号邮箱&quot;
+</code></pre>
+<h3 id="将公钥添加到Github"><a href="#将公钥添加到Github" class="headerlink" title="将公钥添加到Github"></a>将公钥添加到Github</h3><p>将<code>~/.ssh/id_rsa.pub</code>中的内容全部复制<br>登陆到GitHub上，右上角<code>小头像-&gt;Setting-&gt;SSH and GPG keys</code>中，点击<code>new SSH key</code><br>title随便填，将复制的内容粘到<code>Key</code>中，点<code>Add</code>保存</p>
+<h3 id="测试"><a href="#测试" class="headerlink" title="测试"></a>测试</h3><pre><code>ssh -T git@github.com
+</code></pre>
+<p>如果结果为 “ …You’ve successfully authenticated, but GitHub does not provide shell access”，则说明成功。</p>
+<h3 id="修改配置文件"><a href="#修改配置文件" class="headerlink" title="修改配置文件"></a>修改配置文件</h3><p>打开<code>blog/_config.yml</code> 文件，修改为</p>
+<pre><code>deploy:
+  type: git
+  repo: https://github.com/用户名/用户名.github.io.git
+  branch: master
+</code></pre>
+<h3 id="获取令牌"><a href="#获取令牌" class="headerlink" title="获取令牌"></a>获取令牌</h3><p>Github在2021年移除了密码授权方式，因此还需创建令牌<br>在<code>Setting-&gt; Developer settings-&gt;Personal access tokens</code>中,选<code>Generate New token</code>,<code>Note</code>随便填,<code>Select scopes</code>中将<code>repo</code>全选，然后<strong>将生成的token妥善保存</strong>，以后将无法再次查看，如果遗忘只能重设。</p>
+<h3 id="部署"><a href="#部署" class="headerlink" title="部署"></a>部署</h3><pre><code>hexo clean
+hexo g -d #构建并部署
+</code></pre>
+<p>填入Username，Password填之前的token<br>稍后即可在https:&#x2F;&#x2F;用户名.github.io看到你的博客了！</p>
+<hr>
+<p>下一篇将会记录内容编写与个性化设置</p>
+]]></content>
+  </entry>
+  <entry>
+    <title>埃罗芒阿老师OVA 1080p超清</title>
+    <url>/2022/04/30/ova/</url>
+    <content><![CDATA[<h1 id="下载"><a href="#下载" class="headerlink" title="下载"></a>下载</h1><span id="more"></span>
+<p><a href="https://shlies.vercel.app/%E8%A7%86%E9%A2%91/[UHA-WINGS][Eromanga%20Sensei][OVA][01-02][BDRIP%201920x1080][x264%20AAC][CHS](1)/">下载地址1</a></p>
+<p><a href="https://swartart-my.sharepoint.com/:f:/g/personal/admin_swartart_onmicrosoft_com/EutIQzg1q1lImye1c0psqXEBBdLzUs8J1-L86kCu1pNsnA?e=E18puH">下载地址2(Onedrive)</a></p>
+<hr>
+<h1 id="在线播放"><a href="#在线播放" class="headerlink" title="在线播放"></a>在线播放</h1><h2 id="01"><a href="#01" class="headerlink" title="01"></a>01</h2><div align=center>
+<video controls>
+<source src="https://shlies.vercel.app/%E8%A7%86%E9%A2%91/[UHA-WINGS][Eromanga%20Sensei][OVA][01-02][BDRIP%201920x1080][x264%20AAC][CHS](1)/[UHA-WINGS][Eromanga%20Sensei][OVA][01][BDRIP%201920x1080][x264%20AAC][CHS].mp4">
+</video>
+</div>
+
+
+<h2 id="02"><a href="#02" class="headerlink" title="02"></a>02</h2><div align=center>
+<video controls>
+<source src="https://shlies.vercel.app/%E8%A7%86%E9%A2%91/[UHA-WINGS][Eromanga%20Sensei][OVA][01-02][BDRIP%201920x1080][x264%20AAC][CHS](1)/[UHA-WINGS][Eromanga%20Sensei][OVA][02][BDRIP%201920x1080][x264%20AAC][CHS].mp4">
+</video>
+</div>]]></content>
   </entry>
   <entry>
     <title>test_my_site</title>
